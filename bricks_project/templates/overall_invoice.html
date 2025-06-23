@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Materia - Admin Template">
+    <meta name="keywords" content="materia, webapp, admin, dashboard, template, ui">
+    <meta name="author" content="solutionportal">
+    <!-- <base href="/"> -->
+
+    <title>Materia - Admin Template</title>
+
+  
+	{% load static %}
+	<link rel="icon" type="image/x-icon" href="{% static 'images/SS_LOGO.png' %}">
+	
+	<!-- Icons -->
+	<link rel="stylesheet" href="{% static 'fonts/ionicons/css/ionicons.min.css' %}">
+	<link rel="stylesheet" href="{% static 'fonts/font-awesome/css/font-awesome.min.css' %}">
+
+	<!-- Plugins -->
+	<link rel="stylesheet" href="{% static 'styles/plugins/waves.css' %}">
+	<link rel="stylesheet" href="{% static 'styles/plugins/perfect-scrollbar.css' %}">
+	
+	<!-- Css/Less Stylesheets -->
+	<link rel="stylesheet" href="{% static 'styles/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="{% static 'styles/main.min.css' %}">
+	<link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,300' rel='stylesheet' type='text/css'>
+
+
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        .col-md-6.qrCode{
+            display: flex;
+            align-items:center;
+        }
+
+        .row.total-sum.total-sum2{
+            display:flex;
+            justify-content:end;
+        }
+        .clearfix.invoice-head{
+            display:flex;
+        }
+        .clearfix.invoice-head span{
+            width:30%;
+        }
+        .clearfix.invoice-head .estimation-heading{
+            width:70%;
+        }
+        .right thead tr td{
+            padding:10px;
+        }
+    </style>
+
+</head>
+
+<body id="app" class="app off-canvas">
+    
+    <div class="page page-invoice">
+        <div class="page-wrap">
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Invoice Start -->
+                    <button class="btn btn-primary mr5" type="submit" id="submitButton"  onclick="window.location.href='{% url "list_billing" %}';">&larr; Back To Bills List</button>
+                    <div class="invoice-wrap" id= "content">
+                        <div class="clearfix invoice-head">
+							<span>
+								<img src="{% static 'images/ksb_logo.png' %}"  width="200px" alt="">
+							</span>
+                            <div class="estimation-heading">
+                            <h3 class="text-uppercase text-muted text-bold right mt15">Estimation</h3>
+                            <div class="group clearfix right" style="margin:10px 20px 0px">
+                                <a href="#" onclick="downloadPDF()" id="print" class="btn btn-default"><i class="ion ion ion-archive"></i></a>
+                                {% comment %} <a href="#" onclick="downloadPDF()" id="print" class="btn btn-default"><i class="ion ion-printer"></i>Download</a> {% endcomment %}
+                              <a href="javascript:;" class="btn btn-default" id="down" style="display:none"><i
+                                        class="ion ion-archive"></i>Download</a> 
+                                        {% comment %} <a href="{{ MEDIA_URL }}{{ pdf_file.url }}">Download Invoice</a> {% endcomment %}
+                            </div>
+                            </div>
+                        </div>
+
+                        
+
+                        <div class="row mb30">
+                            <div class="clearfix invoice-subhead mb20 col-md-6 right">
+                                <div class="group clearfix left">
+                                    <p class="text-bold mb5">Bill No - {{ billId }}</p>
+                                    {% comment %} <p class="text-bold mb5">Invoice No - SSINV{{ invoice_no }}</p> {% endcomment %}
+                                    <p class="small">Date: {{current_date}}</p>
+                                </div>
+    
+                                
+                            </div>
+                            <div class="col-md-6 left">
+                                <div class="address-wrap">
+                                    <div class="address-title">
+                                        <p class="mb5 text-bold mb0">Sent To :</p>
+                                        <h4 class="mt0 ">{{ data2.customer_id }}</h4>
+                                        <h4 class="mt0 ">{{ data2.customer_name }}</h4>
+                                        <h4 class="mt0 ">{{ data2.phone }}</h4>
+                                        <p>{{data3.Address | upper}}</p>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                           
+                        </div>
+
+                        <!-- invoice table -->
+                        <div class="invo-table">
+                            <center>
+                                <h1><strong>BRICK SUPPLY DETAILS</strong></h1>
+                            </center>
+                            <table class="table table-bordered invoice-table mb30">
+                                <thead>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Rate</th>
+                                        <th>Quantity</th>
+                                        <th>Destination</th>
+                                        <th>Bill Amount</th>
+                                    </tr>
+                                </thead>
+    
+                                <tbody>
+                                    {% for item in data %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{item.rate_per_bricks}}</td>
+                                        <td>{{item.quantity}}</td>
+                                        <td>{{item.destination}}</td>
+                                        <td>{{item.Bill_Amount}}</td>
+                                        
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- #end invoice table -->
+
+
+
+                        <center>
+                            <h1><strong>PAYMENT DETAILS</strong></h1>
+                        </center>
+                        <!-- invoice table -->
+                        <table class="table table-bordered invoice-table mb30">
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Payment Mode</th>
+                                    <th>Mobile No.</th>
+                                    <th>Payment Date</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                
+                                {% for item in data5 %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{item.Payment_Mode}}</td>
+                                        <td>{{item.Mobile_No}}</td>
+                                        <td>{{item.Payment_Date}}</td>
+                                        <td>{{item.Paid_Amount}}</td>
+                                    </tr>
+                                {% endfor %}
+                                
+                            </tbody>
+                            
+                        </table>
+                        {% if not data5 %}
+                        <center>No Payments Done</center>
+                        {% endif %}
+
+                        
+                        <!-- #end invoice table -->
+
+                        <div>
+                            <table class="right table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <td><div class="col-12"><strong>Bill Amount : </strong> ₹{{data2.Bill_Amount}}</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="col-12"><strong>Paid Amount : </strong> ₹ {% if data4 %}{% for i in data4 %}{{i.paid_amount}}{% endfor %}{% else %}0{% endif %}</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="col-12"><strong>Balance Amount :</strong>  ₹ {% if data4 %}{% for i in data4 %}{{i.pending_amount}}{% endfor %}{% else %}{{data2.Bill_Amount}}{% endif %}</div></td>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+
+
+                        {% for i in data4 %}
+                        {% if i.Pending_Amount != 0 %}
+                        <div class="row">
+                            <div class="col-md-6 qrCode">
+                                <img src="data:image/png;base64,{{ qr_base64 }}" width="200px" alt="">
+                                <div>
+                                    <h3><strong>Pay Using This QR Code</strong></h3>
+                                    <h5>sudheerk1462@okicici</h5>
+                                    <img src="{% static 'images\payments_gateways.png' %}" alt="payments_gateways" width="150px">
+                                </div>
+    
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+
+                        
+
+
+                        <!-- <div class="clearfix text-right total-sum ">
+                            <h3 class="text-uppercase text-bold">Total</h3>
+                            <h4 class="sum">₹{{data2.Grand_Total}}</h4>
+                        </div>
+                        <div class="clearfix text-right total-sum ">
+                            <h3 class="text-uppercase text-bold">Pending</h3>
+                            <h4 class="sum">₹ {% if data4 %}{% for i in data4 %}{{i.Pending_Amount}}{% endfor %}{% else %}{{data2.Grand_Total}}{% endif %}</h4>
+                        </div>
+                        <div class="clearfix text-right total-sum ">
+                            <h3 class="text-uppercase text-bold">Paid</h3>
+                            <h4 class="sum">₹ {% if data4 %}{% for i in data4 %}{{i.Paid_Amount}}{% endfor %}{% else %}0{% endif %}</h4>
+                        </div> -->
+                        {% comment %} <p class="text-center large mt30" ></p> {% endcomment %}
+                        <h5 class="text-center large mt30">KSB || PICHATUR || 9963823186</h5>
+                        {% comment %} <p class="text-center small text-info">This is a computer generated invoice. No signature required.</p> {% endcomment %}
+
+
+                    </div>
+
+                </div> <!-- Invoice End -->
+            </div> <!-- #end row -->
+
+        </div> <!-- #end page-wrap -->
+
+    </div>
+
+
+	<script>
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            let content = document.getElementById("content");
+            let print = document.getElementById("print");
+            let down = document.getElementById("down");
+            let submit = document.getElementById("submitButton");
+        
+            // Hide buttons before capture
+            print.style.display = "none";
+            down.style.display = "none";
+            submit.style.display = "none";
+        
+            html2canvas(content, {
+                scale: 4, // Higher scale for better quality (3-5 recommended)
+                useCORS: true, // Handle cross-origin images
+                logging: false,
+                willReadFrequently: true
+            }).then(canvas => {
+                let imgData = canvas.toDataURL("image/png", 1.0);  // Highest quality image
+        
+                let pdf = new jsPDF("p", "mm", "a4");  // A4 PDF
+                let imgWidth = 210; // A4 width in mm
+                let imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
+        
+                let position = 0;
+                let pageHeight = 297; // A4 height in mm
+        
+                pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight, "", "FAST");
+        
+                // If content is longer than one page, split into multiple pages
+                while (imgHeight > pageHeight) {
+                    position -= pageHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight, "", "FAST");
+                    imgHeight -= pageHeight;
+                }
+        
+                pdf.save("KSB.pdf");
+            });
+        
+            // Show buttons after download
+            setTimeout(() => {
+                print.style.display = "inline-block";
+                down.style.display = "none";
+                submit.style.display = "inline-block";
+            }, 3000);
+        }
+        
+    </script>
+
+    <script>
+        function downloadAndSendPDF() {
+            const { jsPDF } = window.jspdf;
+            let content = document.getElementById("content");
+    
+            // Hide buttons before capture
+            document.getElementById("print").style.display = "none";
+            document.getElementById("down").style.display = "none";
+            document.getElementById("submitButton").style.display = "none";
+    
+            html2canvas(content, { scale: 4, useCORS: true }).then(canvas => {
+                let imgData = canvas.toDataURL("image/png", 1.0);
+                let pdf = new jsPDF("p", "mm", "a4");
+                let imgWidth = 210;
+                let imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let position = 0;
+                let pageHeight = 297;
+    
+                pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight, "", "FAST");
+    
+                while (imgHeight > pageHeight) {
+                    position -= pageHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight, "", "FAST");
+                    imgHeight -= pageHeight;
+                }
+    
+                let pdfBlob = pdf.output("blob");
+    
+                let formData = new FormData();
+                formData.append("pdf_file", pdfBlob, "invoice.pdf");
+    
+                // **Get dynamic WhatsApp number from Django template**
+                let whatsappNumber = "6305979503"; 
+    
+                formData.append("whatsapp_number", whatsappNumber);
+    
+                fetch("/upload_pdf/", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => alert("PDF sent to WhatsApp!"))
+                .catch(error => console.error("Error:", error));
+    
+                setTimeout(() => {
+                    document.getElementById("print").style.display = "inline-block";
+                    document.getElementById("submitButton").style.display = "inline-block";
+                }, 200);
+            });
+        }
+    </script>
+    
+
+
+</body>
+
+</html>

@@ -1,0 +1,80 @@
+{% load static %}
+<aside class="nav-wrap" id="site-nav" data-perfect-scrollbar>
+			<div class="nav-head">
+				<!-- site logo -->
+				<a class="site-logo text-uppercase">
+					{% comment %} <i class="ion ion-disc"></i> {% endcomment %}
+					<img src="{% static 'images/ksb_logo.png' %}" alt="">
+					<span class="text">Jr Home</span>
+				</a>
+			</div>
+
+			<!-- Site nav (vertical) -->
+
+			<nav class="site-nav clearfix" role="navigation">
+
+
+				<!-- navigation -->
+				<ul class="list-unstyled clearfix nav-list mb15">
+					<li class="active">
+						<a href="#">
+							<i class="ion ion-monitor"></i>
+							<span class="text">Dashboard</span>
+						</a>
+					</li>
+					{% comment %} <li>
+						<a>
+							<i class="icon ion-md-people"></i>
+							<span class="text">Customer Management</span>
+						</a>
+					</li> {% endcomment %}
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-people"></i>
+							<span class="text">Customer Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_customer' %}">Add Customer</a></li>
+							<li><a href="{% url 'list_customer' %}">List Customer</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-car"></i>
+							<span class="text">Vehicle Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_vehicle' %}">Add Vehicle</a></li>
+							<li><a href="{% url 'list_vehicle' %}">List Vehicle</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-paper"></i>
+							<span class="text">Trip Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_bill' %}">Add bill</a></li>
+							<li><a href="{% url 'list_bill' %}">List bill</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-paper"></i>
+							<span class="text">Payment Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'list_payment' %}">List bill</a></li>
+						</ul>
+					</li>
+
+
+				</ul> <!-- #end navigation -->
+			</nav>
+
+
+		</aside>

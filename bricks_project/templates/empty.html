@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Materia - Admin Template">
+    <meta name="keywords" content="materia, webapp, admin, dashboard, template, ui">
+    <meta name="author" content="solutionportal">
+    <!-- <base href="/"> -->
+
+    <title>KSB</title>
+
+    {% load static %}
+    <link rel="icon" type="image/x-icon" href="{% static 'images/ksb_logo.png' %}">
+
+    <!-- Font Styles -->
+    <link rel="stylesheet" href="{% static 'fonts/font-awesome/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/ionicons/css/ionicons.min.css' %}">
+
+    <!-- Plugins -->
+    <link rel="stylesheet" href="{% static 'styles/plugins/c3.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/plugins/waves.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/plugins/perfect_scrollbar.css' %}">
+
+    <!-- CSS Stylesheets -->
+    <link rel="stylesheet" href="{% static 'styles/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/main.min.css' %}">
+
+
+
+
+
+    <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,300' rel='stylesheet' type='text/css'>
+
+    <!-- Match Media polyfill for IE9 -->
+    <!--[if IE 9]> <script src="scripts/ie/matchMedia.js"></script>  <![endif]-->
+    <style>
+        /* General styling */
+       .dropdown {
+           width: 100%; /* Full width */
+           padding: 10px;
+           font-size: 16px;
+           border:2px solid #ccc;
+           border-radius: 0px;
+           background-color: #fff;
+           cursor: pointer;
+           outline: none;
+           transition: border-color 0.3s, box-shadow 0.3s;
+       }
+       
+       /* Focus effect */
+       .dropdown:focus {
+           border-color: #007bff;
+           box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+       }
+       
+       /* Disabled option */
+       .dropdown option:disabled {
+           color: #aaa;
+       }
+       
+       /* Hover effect */
+       .dropdown:hover {
+           border-color: #0056b3;
+       }
+       
+       /* Custom styling for when dropdown is open */
+       .dropdown:active,
+       .dropdown:focus-within {
+           background-color: #f9f9f9;
+       }
+           /* Style the autocomplete dropdown */
+           .autocomplete-items {
+               position: absolute;
+               {% comment %} border: 1px solid #ddd; {% endcomment %}
+               border-radius: 5px;
+               max-height: 200px;
+               overflow-y: auto;
+               background-color: #fff;
+               z-index: 99;
+               width: 500px;
+           }
+           .autocomplete-items div {
+               padding: 10px;
+               cursor: pointer;
+           }
+           .autocomplete-items div:hover {
+               background-color: #f1f1f1;
+           }
+           .sec-1{
+               display:flex;
+               padding:0px 0px 20px;
+               {% comment %} justify-content : space-evenly; {% endcomment %}
+               align-items : center
+           }
+           .cust-details{
+               width: 100%;
+           }
+           .cust-details div div{
+               display:flex;
+               justify-content:space-around;
+               background: #fff;
+               padding:20px;
+               width:100%
+           }
+           .cust-details div div p{
+               margin:0px;
+               padding:0px;
+           }
+           .table-responsive {
+               
+               background-color:#fff;
+               padding:10px;
+           }
+           .biling-buttons{
+               display:flex;
+               justify-content:center;
+               padding:10px;
+           }
+       
+           .clearfix.add{
+               display:flex;
+               justify-content:center;
+               }
+       
+           .col-md-9.cost_per_quantity{
+               padding-right:0px;
+               padding-left:5px;
+           }
+           .col-md-3.manual{
+               display:flex;
+           }
+       
+           .specs{
+               font-size:10px;
+           }
+           th{
+               text-align:center;
+           }
+    
+           td{
+            text-align:center;
+           }
+       
+           .panel-heading.addbill-heading{
+               display:flex;
+               justify-content:space-between;
+               align-items:center;
+           }
+       
+       
+           
+           
+    </style>
+
+</head>
+
+<body id="app" class="app off-canvas">
+
+    <!-- header -->
+    {% include "includes/header.html" %}
+    <!-- #end header -->
+
+    <!-- main-container -->
+    <div class="main-container clearfix">
+        <!-- main-navigation -->
+            {% include "includes/side_navbar.html" %}
+
+        <!-- #end main-navigation -->
+
+        <div class="content-container fixedHeader nav-expand">
+            <!-- col-left -->
+            <div class="col-sm-12 col-md-11">
+                <div class="sec-1">
+					
+					<div class="cust-details">
+						<div id="customer-container">
+						  
+						</div> <!-- This will display the selected customer details -->
+					</div>
+					
+				</div>
+                <div class="sec-2">
+					<!-- Data Table -->
+					<table class="table table-bordered table-striped table-responsive" id="history-table">
+						<thead>
+							<tr>
+								
+								 <th>
+									Bill Id
+									<div class="th">
+										<i class="fa fa-caret-up icon-up"></i>
+										<i class="fa fa-caret-down icon-down"></i>
+									</div>
+								</th>
+								
+								<th>
+									Billing Date
+									<div class="th">
+										<i class="fa fa-caret-up icon-up"></i>
+										<i class="fa fa-caret-down icon-down"></i>
+									</div>
+								</th>
+								
+								
+								<th>
+									Bill Amount
+									<div class="th">
+										<i class="fa fa-caret-up icon-up"></i>
+										<i class="fa fa-caret-down icon-down"></i>
+									</div>
+								</th>
+								
+								<th>
+									Advance Amount
+									<div class="th">
+										<i class="fa fa-caret-up icon-up"></i>
+										<i class="fa fa-caret-down icon-down"></i>
+									</div>
+								</th>
+								<th>
+									Balance Amount
+									<div class="th">
+										<i class="fa fa-caret-up icon-up"></i>
+										<i class="fa fa-caret-down icon-down"></i>
+									</div>
+								</th>
+								<th>
+									Bill Details
+									<div class="th">
+										<i class="fa fa-caret-up icon-up"></i>
+										<i class="fa fa-caret-down icon-down"></i>
+									</div>
+								</th>
+								<th>
+									Status
+									<div class="th">
+										<i class="fa fa-caret-up icon-up"></i>
+										<i class="fa fa-caret-down icon-down"></i>
+									</div>
+								</th>
+								
+							</tr>
+						</thead>
+						<tbody>
+							<!-- Data initializes via script, can also be loaded via AJAX -->
+						</tbody>
+					</table>
+					<!-- #End Data Table -->
+				</div>
+                <div class="panel panel-default panel-hovered panel-stacked mb30">
+                    <div class="panel-heading"> Add Trip</div>
+                    
+                    <div class="panel-body">
+                        <form id='form' class="form-horizontal" method="POST">
+                            {% csrf_token %}
+                           
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Bill id</label>
+                                <div class="col-md-9">
+                                    <input type="text" readonly name="bill_id" value="{{new_id}}"
+                                        class="form-control" placeholder="insurance ID">
+                                </div>
+                            </div>
+                           
+                            <!-- Customer Id -->
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Customer details</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="search" placeholder="Search here.." class="form-control"
+                                        name="customers_details" autocomplete="off" />
+
+                                        <input type="hidden" id="customer_hidden" name="customer_hidden">
+                                    <div id="autocomplete-list" class="autocomplete-items"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Date</label>
+                                <div class="col-md-9">
+                                    <input type="date" name="date" id = "billingDate" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Vehicle details</label>
+                                <div class="col-md-9">
+                                    <input type="text" id= 'search2' placeholder="Search here.." class="form-control"
+                                        name="vehicle_details"  autocomplete="off" />
+                                    <div id="autocomplete-list" class="autocomplete-items"></div>
+                                </div>
+                            </div>
+                            
+
+
+                            <!-- Name -->
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Quantity</label>
+                                <div class="col-md-9">
+                                    <input type="number" class="form-control"  oninput="updateRate()" id='quantity' name="quantity" placeholder="Quantity"
+                                        required>
+                                </div>
+                            </div>
+                           
+ 
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Bill Amount</label>
+                                <div class="col-md-9">
+                                    <input type="number" class="form-control" oninput="updateRate()" id='bill_amount' placeholder="Bill Amount" name="bill_amount"
+                                        required>
+                                </div>
+                            </div>
+
+
+
+                            <!-- Registration No -->
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Rate Per Bricks</label>
+                                <div class="col-md-9">
+                                    <input type="number" class="form-control" placeholder="Enter rate"
+                                        name="rate_per_bricks" id='rate_per_brick' required readonly>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="clearfix center">
+                                <center>
+                                <button class="btn btn-primary mr5" type="submit" id="submitButton">Submit</button>
+                                </center>
+                            </div>
+
+
+
+
+
+
+                        </form>
+                    </div>
+                </div>
+            </div> <!-- #end col-left -->
+
+        </div>
+
+        <!-- content-here -->
+        <div class="content-container" id="content">
+            <!-- dashboard page -->
+            <div class="page page-dashboard">
+
+                <div class="page-wrap">
+
+
+
+
+                </div> <!-- #end page-wrap -->
+            </div>
+            <!-- #end dashboard page -->
+        </div>
+
+
+    </div> <!-- #end main-container -->
+
+
+    <!-- theme settings -->
+    <div class="site-settings clearfix hidden-xs">
+        <div class="settings clearfix">
+            <div class="trigger ion ion-settings left"></div>
+            <div class="wrapper left">
+                <ul class="list-unstyled other-settings">
+                    <li class="clearfix mb10">
+                        <div class="left small">Nav Horizontal</div>
+                        <div class="md-switch right">
+                            <label>
+                                <input type="checkbox" id="navHorizontal">
+                                <span>&nbsp;</span>
+                            </label>
+                        </div>
+
+
+                    </li>
+                    <li class="clearfix mb10">
+                        <div class="left small">Fixed Header</div>
+                        <div class="md-switch right">
+                            <label>
+                                <input type="checkbox" id="fixedHeader">
+                                <span>&nbsp;</span>
+                            </label>
+                        </div>
+                    </li>
+                    <li class="clearfix mb10">
+                        <div class="left small">Nav Full</div>
+                        <div class="md-switch right">
+                            <label>
+                                <input type="checkbox" id="navFull">
+                                <span>&nbsp;</span>
+                            </label>
+                        </div>
+                    </li>
+                </ul>
+                <hr />
+                <ul class="themes list-unstyled" id="themeColor">
+                    <li data-theme="theme-zero" class="active"></li>
+                    <li data-theme="theme-one"></li>
+                    <li data-theme="theme-two"></li>
+                    <li data-theme="theme-three"></li>
+                    <li data-theme="theme-four"></li>
+                    <li data-theme="theme-five"></li>
+                    <li data-theme="theme-six"></li>
+                    <li data-theme="theme-seven"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- #end theme settings -->
+
+
+
+
+    <!-- Dev only -->
+    <!-- Vendors -->
+    {% load static %}
+
+
+    <script src="{% static 'scripts/vendors.js' %}"></script>
+    <script src="{% static 'scripts/plugins/d3.min.js' %}"></script>
+    <script src="{% static 'scripts/plugins/c3.min.js' %}"></script>
+    <script src="{% static 'scripts/plugins/screenfull.js' %}"></script>
+    <script src="{% static 'scripts/plugins/perfect-scrollbar.min.js' %}"></script>
+    <script src="{% static 'scripts/plugins/waves.min.js' %}"></script>
+    <script src="{% static 'scripts/plugins/jquery.sparkline.min.js' %}"></script>
+    <script src="{% static 'scripts/plugins/jquery.easypiechart.min.js' %}"></script>
+    <script src="{% static 'scripts/plugins/bootstrap-rating.min.js' %}"></script>
+    <script src="{% static 'scripts/app.js' %}"></script>
+    <script src="{% static 'scripts/index.init.js' %}"></script>
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var customerData = [
+                {% for item in sent %}
+                    "{{ item.customer_id }} --- {{ item.customer_name }} --- {{ item.phone }}",
+                {% endfor %}
+            ];
+    
+            var BillingData = [
+                {% for item in data2 %}
+                    {
+                        "customer_id": "{{ item.customer_id }}",
+                        "bill_id": "{{ item.bill_id }}",
+                        "billing_date": "{{ item.date }}",
+                        "grand_total": {{ item.Bill_Amount }},
+                        "paid_amount": {{ item.paid_amount }},
+                        "pending_amount": {{ item.pending_amount }}
+                    }{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ];
+    
+            var input = document.getElementById("search");
+            var hiddenInput = document.getElementById("customer_hidden");
+            var autocompleteList = document.getElementById("autocomplete-list");
+            var customerContainer = document.getElementById("customer-container");
+            var historyTable = document.getElementById("history-table").getElementsByTagName("tbody")[0];
+    
+            // Autocomplete functionality
+            input.addEventListener("input", function () {
+                var val = this.value.trim();
+                autocompleteList.innerHTML = "";
+    
+                if (!val) return;
+    
+                var found = false;
+    
+                customerData.forEach(function (item) {
+                    if (item.toLowerCase().includes(val.toLowerCase())) {
+                        found = true;
+                        var suggestion = document.createElement("div");
+                        suggestion.textContent = item;
+                        suggestion.style.cursor = "pointer";
+                        suggestion.classList.add("autocomplete-item");
+    
+                        suggestion.addEventListener("click", function () {
+                            input.value = item;
+                            hiddenInput.value = item;
+                            autocompleteList.innerHTML = "";
+    
+                            var parts = item.split(" --- ");
+                            if (parts.length === 3) {
+                                var customerId = parts[0].trim();
+                                var customerName = parts[1].trim();
+                                var phoneNo = parts[2].trim();
+    
+                                // Display Customer ID in the container
+                                customerContainer.innerHTML = `
+                                    <div>
+                                        <p><strong>Customer ID:</strong> ${customerId}</p>
+                                        <p><strong>Name:</strong> ${customerName}</p>
+                                        <p><strong>Phone No:</strong> ${phoneNo}</p>
+                                    </div>`;
+    
+                                // Update table with filtered data
+                                updateTable(customerId);
+                            }
+                        });
+    
+                        autocompleteList.appendChild(suggestion);
+                    }
+                });
+    
+                if (!found) {
+                    alert("No matching customer found.");
+                }
+            });
+    
+            // Function to filter and update the table
+            function updateTable(customerId) {
+                // Clear existing table rows
+                historyTable.innerHTML = "";
+    
+                // Filter billing data based on Customer ID
+                var filteredData = BillingData.filter(row => row.customer_id === customerId);
+    
+                // Calculate total pending amount
+                var totalPendingAmount = filteredData.reduce((sum, row) => sum + row.pending_amount, 0);
+    
+                // Get customer details
+                var customerInfo = customerData.find(item => item.startsWith(customerId));
+                var customerName = "";
+                var phoneNo = "";
+    
+                if (customerInfo) {
+                    var parts = customerInfo.split(" --- ");
+                    customerName = parts[1].trim();
+                    phoneNo = parts[2].trim();
+                }
+    
+                // Update Customer Details + Total Pending Amount in the Container
+                customerContainer.innerHTML = `
+                    <div>
+                        <p><strong>Customer ID:</strong> ${customerId}</p>
+                        <p><strong>Name:</strong> ${customerName}</p>
+                        <p><strong>Phone No:</strong> ${phoneNo}</p>
+                        <p><strong>Total Pending Amount:</strong> ₹${totalPendingAmount.toFixed(2)}</p>
+                    </div>`;
+    
+                if (filteredData.length === 0) {
+                    historyTable.innerHTML = "<tr><td colspan='7' style='text-align: center;'>No records found</td></tr>";
+                    return;
+                }
+    
+                filteredData.forEach(function (row) {
+                    var newRow = historyTable.insertRow();
+    
+                    // Determine payment status
+                    var statusText = "";
+                    var statusColor = "";
+    
+                    if (row.pending_amount === 0) {
+                        statusText = "Fully Paid";
+                        statusColor = "green";
+                    } else if (row.pending_amount === row.grand_total) {
+                        statusText = "Not Paid";
+                        statusColor = "red";
+                    } else {
+                        statusText = "Partially Paid";
+                        statusColor = "orange";
+                    }
+    
+                    // Generate bill details URL dynamically
+                    var billDetailsUrl = `/listbillpayments/${row.bill_id}`;
+    
+                    // Add table data
+                    var rowData = [
+                        row.bill_id,
+                        row.billing_date,
+                        row.grand_total,
+                        row.paid_amount,
+                        row.pending_amount,
+                        `<a title="Bill Details" href="${billDetailsUrl}">
+                            <button type="button" class="btn btn-default ion icon ion-md-list"></button>
+                        </a>`,
+                        `<span style="color: ${statusColor}; font-weight: bold;">${statusText}</span>`
+                    ];
+    
+                    rowData.forEach(function (cellData, index) {
+                        var cell = newRow.insertCell();
+                        if (index === 5 || index === 6) {
+                            cell.innerHTML = cellData; // Ensure button and status are correctly rendered
+                        } else {
+                            cell.textContent = cellData;
+                        }
+                    });
+                });
+            }
+    
+            // Hide autocomplete when clicking outside
+            document.addEventListener("click", function (e) {
+                if (!input.contains(e.target) && !autocompleteList.contains(e.target)) {
+                    autocompleteList.innerHTML = "";
+                }
+            });
+        });
+    </script>
+    
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Sample data (you will replace this with Django dynamic data)
+            var customerData = [
+                {% for item in vehicle_data %}
+                    "{{ item.vehicle_name}} --- {{item.vehicle_registration_no}}",
+            {% endfor %}
+            ];
+
+        var input = document.getElementById("search2");
+        var autocompleteList = document.getElementById("autocomplete-list");
+
+        input.addEventListener("input", function () {
+            var val = this.value;
+            autocompleteList.innerHTML = ""; // Clear previous results
+
+            if (!val) return; // Stop if input is empty
+
+            customerData.forEach(function (item) {
+                if (item.toLowerCase().includes(val.toLowerCase())) {
+                    var suggestion = document.createElement("div");
+                    suggestion.textContent = item;
+                    suggestion.addEventListener("click", function () {
+                        input.value = item; // Set input value on selection
+                        autocompleteList.innerHTML = ""; // Hide dropdown
+                    });
+                    autocompleteList.appendChild(suggestion);
+                }
+            });
+        });
+
+        document.addEventListener("click", function (e) {
+            if (!input.contains(e.target) && !autocompleteList.contains(e.target)) {
+                autocompleteList.innerHTML = ""; // Hide dropdown when clicking outside
+            }
+        });
+        });
+    </script>
+
+    <script>
+        
+        function updateRate() {
+            let quantity = parseFloat(document.getElementById('quantity').value) || 0;
+            let billAmount = parseFloat(document.getElementById('bill_amount').value) || 0;
+            
+            if (quantity > 0) {
+                let ratePerBrick = billAmount / quantity;
+                document.getElementById('rate_per_brick').value = ratePerBrick.toFixed(2);
+            } else {
+                document.getElementById('rate_per_brick').value = '';
+            }
+        }
+     
+    </script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let today = new Date().toISOString().split('T')[0]; 
+            document.getElementById("billingDate").value = today;
+        });
+    </script>
+
+</body>
+
+</html>
